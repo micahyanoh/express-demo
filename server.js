@@ -1,3 +1,4 @@
+import joi from "joi";
 import express from "express";
 
 const app = express();
@@ -51,6 +52,18 @@ app.post("/api/courses", (req, res) => {
   courses.push(course);
   res.send(course);
 });
+
+//put endpoint
+
+app.put("/api/courses/:id",(req,res)=>{
+    const course= courses.find(c=> c.id === parseInt(req.params.id) );
+    if(!course){
+        req.status(404).send(`course doesn't exist`);
+    }
+
+    course.name = req.body;
+    req.send(course)
+})
 
 //PORT
 const port = process.env.PORT || 3000;
