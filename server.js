@@ -39,7 +39,7 @@ app.get("/api/courses/:id/:name", (req, res) => {
 // post endpoint
 
 app.post("/api/courses", (req, res) => {
-  if (!req.name || req.name.length < 3) {
+  if (!req.body.name || req.body.name.length < 3) {
     // 400 Bad Request
     res.status(400).send("Bad Request");
     return; //we do not want the rest of the fn to be executed
@@ -55,15 +55,25 @@ app.post("/api/courses", (req, res) => {
 
 //put endpoint
 
-app.put("/api/courses/:id",(req,res)=>{
-    const course= courses.find(c=> c.id === parseInt(req.params.id) );
-    if(!course){
-        req.status(404).send(`course doesn't exist`);
-    }
+app.put("/api/courses/:id", (req, res) => {
+  const course = courses.find((c) => c.id === parseInt(req.params.id));
+  if (!course) {
+    res.status(404).send(`course doesn't exist`);
+  }
 
-    course.name = req.body;
-    req.send(course)
-})
+  course.name = req.body.name;
+  res.send(course);
+});
+
+// delete endpoint
+app.delete("/api/courses/:id", (req, res) => {
+  const course = courses.find((c) => c.id === parseInt(req.params.id));
+  if (!course) res.status(404).send(`Course not found`);
+  // delete
+  const index = courses.indexOf(course);
+  courses.splice(index, 1);
+  res.send(course);
+});
 
 //PORT
 const port = process.env.PORT || 3000;
