@@ -24,7 +24,7 @@ app.get("/api/courses", (req, res) => {
 app.get("/api/courses/:id", (req, res) => {
   //let is used to name a variable that you intend to reset later
   let course = courses.find((c) => c.id === parseInt(req.params.id));
-  if (!course) res.status(404).send(`Course with id not found`);
+  if (!course) res.status(404).send(`Course with id not found`); // 400 not found;
   res.send(course);
 });
 // using more than one parameters
@@ -38,6 +38,11 @@ app.get("/api/courses/:id/:name", (req, res) => {
 // post endpoint
 
 app.post("/api/courses", (req, res) => {
+  if (!req.name || req.name.length < 3) {
+    // 400 Bad Request
+    res.status(400).send("Bad Request");
+    return; //we do not want the rest of the fn to be executed
+  }
   const course = {
     id: courses.length + 1,
     name: req.body.name,
